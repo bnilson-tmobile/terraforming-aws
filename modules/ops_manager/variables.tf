@@ -32,7 +32,7 @@ variable "additional_iam_roles_arn" {
 }
 
 variable "opsman_attached_dns_prefix" {
-  dype    = "string"
+  type    = "string"
   default = "pcf"
 }
 
