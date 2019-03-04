@@ -2,6 +2,11 @@ variable "env_name" {
   type = "string"
 }
 
+variable "name_prefix" {
+  type    = "string"
+  default = ""
+}
+
 variable "region" {
   type = "string"
 }
@@ -56,6 +61,7 @@ variable "nat_ami_map" {
 }
 
 locals {
+  name_prefix         = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
   infrastructure_cidr = "${cidrsubnet(var.vpc_cidr, 10, 64)}"
   public_cidr         = "${cidrsubnet(var.vpc_cidr, 6, 0)}"
 }

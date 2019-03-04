@@ -25,6 +25,11 @@ variable "env_name" {
   type = "string"
 }
 
+variable "name_prefix" {
+  type    = "string"
+  default = ""
+}
+
 variable "availability_zones" {
   type = "list"
 }
@@ -42,5 +47,7 @@ variable "tags" {
 }
 
 locals {
+  name_prefix = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
+
   rds_cidr = "${cidrsubnet(var.vpc_cidr, 6, 3)}"
 }

@@ -9,6 +9,8 @@ terraform {
 }
 
 locals {
+  name_prefix = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
+
   ops_man_subnet_id = "${var.ops_manager_private ? element(module.infra.infrastructure_subnet_ids, 0) : element(module.infra.public_subnet_ids, 0)}"
 
   bucket_suffix = "${random_integer.bucket.result}"
@@ -31,6 +33,7 @@ module "infra" {
 
   region             = "${var.region}"
   env_name           = "${var.env_name}"
+  name_prefix        = "${local.name_prefix}"
   availability_zones = "${var.availability_zones}"
   vpc_cidr           = "${var.vpc_cidr}"
 
@@ -50,6 +53,7 @@ module "ops_manager" {
   subnet_id      = "${local.ops_man_subnet_id}"
 
   env_name                 = "${var.env_name}"
+  name_prefix              = "${local.name_prefix}"
   region                   = "${var.region}"
   ami                      = "${var.ops_manager_ami}"
   optional_ami             = "${var.optional_ops_manager_ami}"
@@ -68,9 +72,10 @@ module "ops_manager" {
 module "pas_certs" {
   source = "../modules/certs"
 
-  subdomains = ["*.apps", "*.sys", "*.login.sys", "*.uaa.sys"]
-  env_name   = "${var.env_name}"
-  dns_suffix = "${var.dns_suffix}"
+  subdomains  = ["*.apps", "*.sys", "*.login.sys", "*.uaa.sys"]
+  env_name    = "${var.env_name}"
+  name_prefix = "${local.name_prefix}"
+  dns_suffix  = "${var.dns_suffix}"
 
   ssl_cert           = "${var.ssl_cert}"
   ssl_private_key    = "${var.ssl_private_key}"
@@ -83,6 +88,7 @@ module "isoseg_certs" {
 
   subdomains    = ["*.iso"]
   env_name      = "${var.env_name}"
+  name_prefix   = "${local.name_prefix}"
   dns_suffix    = "${var.dns_suffix}"
   resource_name = "isoseg"
 
@@ -96,6 +102,7 @@ module "pas" {
   source = "../modules/pas"
 
   env_name           = "${var.env_name}"
+  name_prefix        = "${local.name_prefix}"
   region             = "${var.region}"
   availability_zones = "${var.availability_zones}"
   vpc_cidr           = "${var.vpc_cidr}"
@@ -131,6 +138,7 @@ module "rds" {
   db_port        = 3306
 
   env_name           = "${var.env_name}"
+  name_prefix        = "${local.name_prefix}"
   availability_zones = "${var.availability_zones}"
   vpc_cidr           = "${var.vpc_cidr}"
   vpc_id             = "${module.infra.vpc_id}"

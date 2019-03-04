@@ -2,6 +2,11 @@ variable "env_name" {
   type = "string"
 }
 
+variable "name_prefix" {
+  type    = "string"
+  default = ""
+}
+
 variable "region" {
   type = "string"
 }
@@ -39,6 +44,7 @@ variable "tags" {
 }
 
 locals {
+  name_prefix       = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
   pks_cidr          = "${cidrsubnet(var.vpc_cidr, 6, 1)}"
   pks_services_cidr = "${cidrsubnet(var.vpc_cidr, 6, 2)}"
 }

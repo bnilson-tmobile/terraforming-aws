@@ -6,6 +6,11 @@ variable "env_name" {
   type = "string"
 }
 
+variable "name_prefix" {
+  type    = "string"
+  default = ""
+}
+
 variable "availability_zones" {
   type = "list"
 }
@@ -20,6 +25,11 @@ variable "region" {
 
 variable "zone_id" {
   type = "string"
+}
+
+variable plane_dns_prefix {
+  type    = "string"
+  default = "plane"
 }
 
 variable "dns_suffix" {
@@ -39,5 +49,6 @@ variable "tags" {
 }
 
 locals {
+  name_prefix        = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
   control_plane_cidr = "${cidrsubnet(var.vpc_cidr, 6, 1)}"
 }

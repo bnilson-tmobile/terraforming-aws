@@ -18,6 +18,7 @@ module "infra" {
 
   region             = "${var.region}"
   env_name           = "${var.env_name}"
+  name_prefix        = "${local.name_prefix}"
   availability_zones = "${var.availability_zones}"
   vpc_cidr           = "${var.vpc_cidr}"
 
@@ -36,6 +37,7 @@ module "ops_manager" {
   subnet_id      = "${local.ops_man_subnet_id}"
 
   env_name      = "${var.env_name}"
+  name_prefix   = "${local.name_prefix}"
   region        = "${var.region}"
   ami           = "${var.ops_manager_ami}"
   optional_ami  = "${var.optional_ops_manager_ami}"
@@ -56,6 +58,7 @@ module "control_plane" {
   source                  = "../modules/control_plane"
   vpc_id                  = "${module.infra.vpc_id}"
   env_name                = "${var.env_name}"
+  name_prefix             = "${local.name_prefix}"
   availability_zones      = "${var.availability_zones}"
   vpc_cidr                = "${var.vpc_cidr}"
   public_subnet_ids       = "${module.infra.public_subnet_ids}"
@@ -78,6 +81,7 @@ module "rds" {
   db_port        = 5432
 
   env_name           = "${var.env_name}"
+  name_prefix        = "${local.name_prefix}"
   availability_zones = "${var.availability_zones}"
   vpc_cidr           = "${var.vpc_cidr}"
   vpc_id             = "${module.infra.vpc_id}"

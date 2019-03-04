@@ -5,7 +5,7 @@ resource "aws_subnet" "control_plane" {
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
-    Name = "${var.env_name}-control-plane-subnet${count.index}"
+    Name = "${local.name_prefix}-control-plane-subnet${count.index}"
   }
 }
 
@@ -59,5 +59,5 @@ resource "aws_security_group" "control_plane_internal" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-control-plane-internal-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-control-plane-internal-security-group"))}"
 }

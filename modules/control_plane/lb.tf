@@ -50,11 +50,11 @@ resource "aws_security_group" "control_plane" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-control-plane-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-control-plane-security-group"))}"
 }
 
 resource "aws_lb" "control_plane" {
-  name                             = "${var.env_name}-control-plane-lb"
+  name                             = "${local.name_prefix}-control-plane-lb"
   load_balancer_type               = "network"
   enable_cross_zone_load_balancing = true
   internal                         = false
@@ -73,7 +73,7 @@ resource "aws_lb_listener" "atc_http" {
 }
 
 resource "aws_lb_target_group" "atc_http" {
-  name     = "${var.env_name}-atc-http-tg"
+  name     = "${local.name_prefix}-atc-http-tg"
   port     = 80
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -98,7 +98,7 @@ resource "aws_lb_listener" "atc_https" {
 }
 
 resource "aws_lb_target_group" "atc_https" {
-  name     = "${var.env_name}-atc-https-tg"
+  name     = "${local.name_prefix}-atc-https-tg"
   port     = 443
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -123,7 +123,7 @@ resource "aws_lb_listener" "uaa" {
 }
 
 resource "aws_lb_target_group" "uaa" {
-  name     = "${var.env_name}-uaa-tg"
+  name     = "${local.name_prefix}-uaa-tg"
   port     = 8443
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -148,7 +148,7 @@ resource "aws_lb_listener" "tsa" {
 }
 
 resource "aws_lb_target_group" "tsa" {
-  name     = "${var.env_name}-tsa-tg"
+  name     = "${local.name_prefix}-tsa-tg"
   port     = 2222
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -173,7 +173,7 @@ resource "aws_lb_listener" "credhub" {
 }
 
 resource "aws_lb_target_group" "credhub" {
-  name     = "${var.env_name}-credhub-tg"
+  name     = "${local.name_prefix}-credhub-tg"
   port     = 8844
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"

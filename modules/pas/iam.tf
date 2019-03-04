@@ -14,14 +14,14 @@ data "template_file" "pas_backup_bucket_policy" {
 }
 
 resource "aws_iam_policy" "pas_backup_bucket_policy" {
-  name   = "${var.env_name}_pas_backup_bucket_policy"
+  name   = "${local.name_prefix}_pas_backup_bucket_policy"
   policy = "${data.template_file.pas_backup_bucket_policy.rendered}"
 
   count = "${var.create_backup_pas_buckets ? 1 : 0}"
 }
 
 resource "aws_iam_role_policy" "pas_backup_bucket_access" {
-  name   = "${var.env_name}_pas_backup_bucket_access"
+  name   = "${local.name_prefix}_pas_backup_bucket_access"
   role   = "${aws_iam_role.pas_bucket_access.id}"
   policy = "${data.template_file.pas_backup_bucket_policy.rendered}"
 
@@ -38,7 +38,7 @@ resource "aws_iam_user_policy_attachment" "pas_backup_bucket_access" {
 # ERT
 
 resource "aws_iam_policy" "ert" {
-  name   = "${var.env_name}_ert"
+  name   = "${local.name_prefix}_ert"
   policy = "${data.template_file.ert.rendered}"
 }
 
@@ -48,14 +48,14 @@ resource "aws_iam_user_policy_attachment" "ert" {
 }
 
 resource "aws_kms_key" "blobstore_kms_key" {
-  description             = "${var.env_name} KMS key"
+  description             = "${local.name_prefix} KMS key"
   deletion_window_in_days = 7
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name} Blobstore KMS Key"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix} Blobstore KMS Key"))}"
 }
 
 resource "aws_kms_alias" "blobstore_kms_key_alias" {
-  name          = "alias/${var.env_name}"
+  name          = "alias/${local.name_prefix}"
   target_key_id = "${aws_kms_key.blobstore_kms_key.key_id}"
 }
 
@@ -72,7 +72,7 @@ data "template_file" "ert" {
 }
 
 resource "aws_iam_role" "pas_bucket_access" {
-  name = "${var.env_name}_pas_bucket_access"
+  name = "${local.name_prefix}_pas_bucket_access"
 
   assume_role_policy = <<EOF
 {
