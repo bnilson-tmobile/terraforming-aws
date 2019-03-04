@@ -5,7 +5,7 @@ resource "aws_subnet" "pks_subnets" {
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
-    Name = "${var.env_name}-pks-subnet${count.index}"
+    Name = "${local.name_prefix}-pks-subnet${count.index}"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_subnet" "services_subnets" {
   cidr_block        = "${cidrsubnet(local.pks_services_cidr, 2, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-pks-services-subnet${count.index}"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-pks-services-subnet${count.index}"))}"
 }
 
 data "template_file" "services_subnet_gateways" {
@@ -84,7 +84,7 @@ resource "aws_security_group" "pks_internal_security_group" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-pks-internal-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-pks-internal-security-group"))}"
 }
 
 // Allow access to master nodes
@@ -107,5 +107,5 @@ resource "aws_security_group" "pks_master_security_group" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-pks-master-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-pks-master-security-group"))}"
 }

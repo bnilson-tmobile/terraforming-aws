@@ -10,6 +10,10 @@ variable "private" {}
 
 variable "env_name" {}
 
+variable "name_prefix" {
+  default = ""
+}
+
 variable "ami" {}
 
 variable "optional_ami" {}
@@ -27,6 +31,21 @@ variable "additional_iam_roles_arn" {
   default = []
 }
 
+variable "opsman_attached_dns_prefix" {
+  dype    = "string"
+  default = "pcf"
+}
+
+variable "opsman_unattached_dns_prefix" {
+  type    = "string"
+  default = "pcf"
+}
+
+variable "opsman_optional_dns_prefix" {
+  type    = "string"
+  default = "pcf-optional"
+}
+
 variable "dns_suffix" {}
 
 variable "zone_id" {}
@@ -35,4 +54,8 @@ variable "bucket_suffix" {}
 
 variable "tags" {
   type = "map"
+}
+
+locals {
+  name_prefix = "${var.name_prefix == "" ? var.env_name : var.name_prefix}"
 }

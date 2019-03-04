@@ -26,11 +26,11 @@ resource "aws_security_group" "web_lb" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-lb-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-lb-security-group"))}"
 }
 
 resource "aws_lb" "web" {
-  name                             = "${var.env_name}-web-lb"
+  name                             = "${local.name_prefix}-web-lb"
   load_balancer_type               = "network"
   enable_cross_zone_load_balancing = true
   internal                         = "${var.internetless}"
@@ -60,7 +60,7 @@ resource "aws_lb_listener" "web_443" {
 }
 
 resource "aws_lb_target_group" "web_80" {
-  name     = "${var.env_name}-web-tg-80"
+  name     = "${local.name_prefix}-web-tg-80"
   port     = 80
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -71,7 +71,7 @@ resource "aws_lb_target_group" "web_80" {
 }
 
 resource "aws_lb_target_group" "web_443" {
-  name     = "${var.env_name}-web-tg-443"
+  name     = "${local.name_prefix}-web-tg-443"
   port     = 443
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -102,11 +102,11 @@ resource "aws_security_group" "ssh_lb" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-ssh-lb-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-ssh-lb-security-group"))}"
 }
 
 resource "aws_lb" "ssh" {
-  name                             = "${var.env_name}-ssh-lb"
+  name                             = "${local.name_prefix}-ssh-lb"
   load_balancer_type               = "network"
   enable_cross_zone_load_balancing = true
   internal                         = "${var.internetless}"
@@ -125,7 +125,7 @@ resource "aws_lb_listener" "ssh" {
 }
 
 resource "aws_lb_target_group" "ssh" {
-  name     = "${var.env_name}-ssh-tg"
+  name     = "${local.name_prefix}-ssh-tg"
   port     = 2222
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -160,11 +160,11 @@ resource "aws_security_group" "tcp_lb" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-tcp-lb-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-tcp-lb-security-group"))}"
 }
 
 resource "aws_lb" "tcp" {
-  name                             = "${var.env_name}-tcp-lb"
+  name                             = "${local.name_prefix}-tcp-lb"
   load_balancer_type               = "network"
   enable_cross_zone_load_balancing = true
   internal                         = "${var.internetless}"
@@ -185,7 +185,7 @@ resource "aws_lb_listener" "tcp" {
 }
 
 resource "aws_lb_target_group" "tcp" {
-  name     = "${var.env_name}-tg-${1024 + count.index}"
+  name     = "${local.name_prefix}-tg-${1024 + count.index}"
   port     = "${1024 + count.index}"
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"

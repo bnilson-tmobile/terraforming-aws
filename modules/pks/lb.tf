@@ -25,11 +25,11 @@ resource "aws_security_group" "pks_api_lb_security_group" {
     to_port     = 0
   }
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-pks-api-lb-security-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-pks-api-lb-security-group"))}"
 }
 
 resource "aws_lb" "pks_api" {
-  name                             = "${var.env_name}-pks-api"
+  name                             = "${local.name_prefix}-pks-api"
   load_balancer_type               = "network"
   enable_cross_zone_load_balancing = true
   internal                         = false
@@ -48,7 +48,7 @@ resource "aws_lb_listener" "pks_api_9021" {
 }
 
 resource "aws_lb_target_group" "pks_api_9021" {
-  name     = "${var.env_name}-pks-tg-9021"
+  name     = "${local.name_prefix}-pks-tg-9021"
   port     = 9021
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"
@@ -73,7 +73,7 @@ resource "aws_lb_listener" "pks_api_8443" {
 }
 
 resource "aws_lb_target_group" "pks_api_8443" {
-  name     = "${var.env_name}-pks-tg-8443"
+  name     = "${local.name_prefix}-pks-tg-8443"
   port     = 8443
   protocol = "TCP"
   vpc_id   = "${var.vpc_id}"

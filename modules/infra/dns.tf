@@ -22,14 +22,14 @@ resource "aws_route53_zone" "pcf_zone" {
 
   name = "${var.env_name}.${var.dns_suffix}"
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-hosted-zone"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-hosted-zone"))}"
 }
 
 resource "aws_route53_record" "name_servers" {
   count = "${local.use_route53 ? (1 - local.hosted_zone_count) : 0}"
 
   zone_id = "${local.zone_id}"
-  name    = "${var.env_name}.${var.dns_suffix}"
+  name    = "${local.name_prefix}.${var.dns_suffix}"
 
   type = "NS"
   ttl  = 300

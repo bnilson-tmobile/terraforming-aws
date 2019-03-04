@@ -2,6 +2,11 @@ variable "env_name" {
   type = "string"
 }
 
+variable "name_prefix" {
+  type    = "string"
+  default = ""
+}
+
 variable "region" {
   type = "string"
 }
@@ -36,6 +41,26 @@ variable "zone_id" {
   type = "string"
 }
 
+variable "sys_dns_prefix" {
+  type    = "string"
+  default = "sys"
+}
+
+variable "apps_dns_prefix" {
+  type    = "string"
+  default = "apps"
+}
+
+variable "ssh_dns_prefix" {
+  type    = "string"
+  default = "ssh"
+}
+
+variable "tcp_dns_prefix" {
+  type    = "string"
+  default = "tcp"
+}
+
 variable "dns_suffix" {
   type = "string"
 }
@@ -65,6 +90,7 @@ variable "tags" {
 }
 
 locals {
+  name_prefix   = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
   pas_cidr      = "${cidrsubnet(var.vpc_cidr, 6, 1)}"
   services_cidr = "${cidrsubnet(var.vpc_cidr, 6, 2)}"
 }

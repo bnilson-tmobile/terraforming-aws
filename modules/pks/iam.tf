@@ -1,10 +1,10 @@
 resource "aws_iam_policy" "pks_master" {
-  name   = "${var.env_name}_pks-master-policy"
+  name   = "${local.name_prefix}_pks-master-policy"
   policy = "${file("${path.module}/policies/pks-master.json")}"
 }
 
 resource "aws_iam_role" "pks_master" {
-  name = "${var.env_name}_pks-master"
+  name = "${local.name_prefix}_pks-master"
 
   lifecycle {
     create_before_destroy = true
@@ -36,7 +36,7 @@ resource "aws_iam_role_policy_attachment" "pks_master" {
 }
 
 resource "aws_iam_instance_profile" "pks_master" {
-  name = "${var.env_name}_pks-master"
+  name = "${local.name_prefix}_pks-master"
   role = "${aws_iam_role.pks_master.name}"
 
   lifecycle {
@@ -45,12 +45,12 @@ resource "aws_iam_instance_profile" "pks_master" {
 }
 
 resource "aws_iam_policy" "pks_worker" {
-  name   = "${var.env_name}_pks-worker-policy"
+  name   = "${local.name_prefix}_pks-worker-policy"
   policy = "${file("${path.module}/policies/pks-worker.json")}"
 }
 
 resource "aws_iam_role" "pks_worker" {
-  name = "${var.env_name}_pks-worker"
+  name = "${local.name_prefix}_pks-worker"
 
   lifecycle {
     create_before_destroy = true
@@ -82,7 +82,7 @@ resource "aws_iam_role_policy_attachment" "pks_worker" {
 }
 
 resource "aws_iam_instance_profile" "pks_worker" {
-  name = "${var.env_name}_pks-worker"
+  name = "${local.name_prefix}_pks-worker"
   role = "${aws_iam_role.pks_worker.name}"
 
   lifecycle {

@@ -5,7 +5,7 @@ resource "aws_subnet" "pas_subnets" {
   availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
-    Name = "${var.env_name}-ert-subnet${count.index}"
+    Name = "${local.name_prefix}-ert-subnet${count.index}"
   }
 }
 
@@ -31,7 +31,7 @@ resource "aws_subnet" "services_subnets" {
   cidr_block        = "${cidrsubnet(local.services_cidr, 2, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-services-subnet${count.index}"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-services-subnet${count.index}"))}"
 }
 
 data "template_file" "services_subnet_gateways" {

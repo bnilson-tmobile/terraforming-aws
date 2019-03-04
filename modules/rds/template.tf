@@ -4,16 +4,16 @@ resource "aws_subnet" "rds_subnets" {
   cidr_block        = "${cidrsubnet(local.rds_cidr, 2, count.index)}"
   availability_zone = "${element(var.availability_zones, count.index)}"
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-rds-subnet${count.index}"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-rds-subnet${count.index}"))}"
 }
 
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name        = "${var.env_name}_db_subnet_group"
+  name        = "${local.name_prefix}_db_subnet_group"
   description = "RDS Subnet Group"
 
   subnet_ids = ["${aws_subnet.rds_subnets.*.id}"]
 
-  tags = "${merge(var.tags, map("Name", "${var.env_name}-db-subnet-group"))}"
+  tags = "${merge(var.tags, map("Name", "${local.name_prefix}-db-subnet-group"))}"
 
   count = "${var.rds_instance_count > 0 ? 1 : 0}"
 }
@@ -37,7 +37,7 @@ resource "aws_security_group" "rds_security_group" {
     to_port     = 0
   }
 
-  tags  = "${merge(var.tags, map("Name", "${var.env_name}-rds-security-group"))}"
+  tags  = "${merge(var.tags, map("Name", "${local.name_prefix}-rds-security-group"))}"
   count = "${var.rds_instance_count > 0 ? 1 : 0}"
 }
 
@@ -51,7 +51,7 @@ resource "aws_db_instance" "rds" {
   instance_class          = "${var.rds_instance_class}"
   engine                  = "${var.engine}"
   engine_version          = "${var.engine_version}"
-  identifier              = "${var.env_name}"
+  identifier              = "${local.name_prefix}"
   username                = "${var.rds_db_username}"
   password                = "${random_string.rds_password.result}"
   db_subnet_group_name    = "${aws_db_subnet_group.rds_subnet_group.name}"

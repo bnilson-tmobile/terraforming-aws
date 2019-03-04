@@ -1,5 +1,9 @@
 variable "env_name" {}
 
+variable "name_prefix" {
+  default = ""
+}
+
 variable "dns_suffix" {}
 
 variable "hosted_zone" {

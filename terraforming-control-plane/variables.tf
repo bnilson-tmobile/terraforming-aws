@@ -1,5 +1,9 @@
 variable "env_name" {}
 
+variable "name_prefix" {
+  default = ""
+}
+
 variable "dns_suffix" {}
 variable "access_key" {}
 variable "secret_key" {}
@@ -72,7 +76,9 @@ variable "tags" {
 }
 
 locals {
-  ops_man_subnet_id = "${var.ops_manager_private ? element(module.infra.infrastructure_subnet_ids, 0) : element(module.infra.public_subnet_ids, 0)}"
+    name_prefix = "${var.name_prefix == "" ? var.env_prefix : var.name_prefix}"
+    
+    ops_man_subnet_id = "${var.ops_manager_private ? element(module.infra.infrastructure_subnet_ids, 0) : element(module.infra.public_subnet_ids, 0)}"
 
   bucket_suffix = "${random_integer.bucket.result}"
 
